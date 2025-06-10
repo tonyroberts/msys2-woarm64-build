@@ -3,6 +3,10 @@ name: Build MinGW cross-compilation toolchain
 on:
   workflow_dispatch:
     inputs:
+      msys2_packages_repository:
+        description: "MSYS2 packages repository to build from"
+        type: string
+        default: "Windows-on-ARM-Experiments/MSYS2-packages"
       msys2_packages_branch:
         description: "MSYS2-packages branch to build"
         type: string
@@ -23,7 +27,15 @@ jobs:
     uses: ./.github/workflows/build-package.yml
     with:
       package_name: mingw-w64-cross-mingwarm64-headers
-      packages_repository: Windows-on-ARM-Experiments/MSYS2-packages
+      packages_repository: ${{ inputs.msys2_packages_branch || 'Windows-on-ARM-Experiments/MSYS2-packages' }}
+      packages_branch: ${{ inputs.msys2_packages_branch || 'woarm64' }}
+
+  mingw-w64-cross-mingwarm64-tools:
+    uses: ./.github/workflows/build-package.yml
+    needs: mingw-w64-cross-mingwarm64-headers
+    with:
+      package_name: mingw-w64-cross-mingwarm64-tools
+      packages_repository: ${{ inputs.msys2_packages_branch || 'Windows-on-ARM-Experiments/MSYS2-packages' }}
       packages_branch: ${{ inputs.msys2_packages_branch || 'woarm64' }}
 
   mingw-w64-cross-mingwarm64-binutils:
@@ -32,7 +44,7 @@ jobs:
     with:
       package_name: mingw-w64-cross-mingwarm64-binutils
       needs: ${{ toJson(needs) }}
-      packages_repository: Windows-on-ARM-Experiments/MSYS2-packages
+      packages_repository: ${{ inputs.msys2_packages_branch || 'Windows-on-ARM-Experiments/MSYS2-packages' }}
       packages_branch: ${{ inputs.msys2_packages_branch || 'woarm64' }}
 
   mingw-w64-cross-mingwarm64-gcc-stage1:
@@ -44,7 +56,7 @@ jobs:
     with:
       package_name: mingw-w64-cross-mingwarm64-gcc-stage1
       needs: ${{ toJson(needs) }}
-      packages_repository: Windows-on-ARM-Experiments/MSYS2-packages
+      packages_repository: ${{ inputs.msys2_packages_branch || 'Windows-on-ARM-Experiments/MSYS2-packages' }}
       packages_branch: ${{ inputs.msys2_packages_branch || 'woarm64' }}
 
   mingw-w64-cross-mingwarm64-windows-default-manifest:
@@ -56,7 +68,7 @@ jobs:
     with:
       package_name: mingw-w64-cross-mingwarm64-windows-default-manifest
       needs: ${{ toJson(needs) }}
-      packages_repository: Windows-on-ARM-Experiments/MSYS2-packages
+      packages_repository: ${{ inputs.msys2_packages_branch || 'Windows-on-ARM-Experiments/MSYS2-packages' }}
       packages_branch: ${{ inputs.msys2_packages_branch || 'woarm64' }}
 
   mingw-w64-cross-mingwarm64-crt:
@@ -70,7 +82,7 @@ jobs:
       package_name: mingw-w64-cross-mingwarm64-crt
       needs: ${{ toJson(needs) }}
       dependencies: mingw-w64-cross-mingw64-winpthreads
-      packages_repository: Windows-on-ARM-Experiments/MSYS2-packages
+      packages_repository: ${{ inputs.msys2_packages_branch || 'Windows-on-ARM-Experiments/MSYS2-packages' }}
       packages_branch: ${{ inputs.msys2_packages_branch || 'woarm64' }}
 
   mingw-w64-cross-mingwarm64-winpthreads:
@@ -84,7 +96,7 @@ jobs:
     with:
       package_name: mingw-w64-cross-mingwarm64-winpthreads
       needs: ${{ toJson(needs) }}
-      packages_repository: Windows-on-ARM-Experiments/MSYS2-packages
+      packages_repository: ${{ inputs.msys2_packages_branch || 'Windows-on-ARM-Experiments/MSYS2-packages' }}
       packages_branch: ${{ inputs.msys2_packages_branch || 'woarm64' }}
 
   mingw-w64-cross-mingwarm64-gcc:
@@ -100,7 +112,7 @@ jobs:
     with:
       package_name: mingw-w64-cross-mingwarm64-gcc
       needs: ${{ toJson(needs) }}
-      packages_repository: Windows-on-ARM-Experiments/MSYS2-packages
+      packages_repository: ${{ inputs.msys2_packages_branch || 'Windows-on-ARM-Experiments/MSYS2-packages' }}
       packages_branch: ${{ inputs.msys2_packages_branch || 'woarm64' }}
 
   mingw-w64-cross-mingwarm64-zlib:
@@ -117,5 +129,5 @@ jobs:
     with:
       package_name: mingw-w64-cross-mingwarm64-zlib
       needs: ${{ toJson(needs) }}
-      packages_repository: Windows-on-ARM-Experiments/MSYS2-packages
+      packages_repository: ${{ inputs.msys2_packages_branch || 'Windows-on-ARM-Experiments/MSYS2-packages' }}
       packages_branch: ${{ inputs.msys2_packages_branch || 'woarm64' }}
