@@ -19,17 +19,18 @@ on:
         value: ${{ toJson(jobs) }}
 
 jobs:
-  mingw-w64-cross-mingwarm64-tools:
-    uses: ./.github/workflows/build-package.yml
-    with:
-      package_name: mingw-w64-cross-mingwarm64-tools
-      packages_repository: Windows-on-ARM-Experiments/MSYS2-packages
-      packages_branch: ${{ inputs.msys2_packages_branch || 'woarm64' }}
-
   mingw-w64-cross-mingwarm64-headers:
     uses: ./.github/workflows/build-package.yml
     with:
       package_name: mingw-w64-cross-mingwarm64-headers
+      packages_repository: Windows-on-ARM-Experiments/MSYS2-packages
+      packages_branch: ${{ inputs.msys2_packages_branch || 'woarm64' }}
+
+  mingw-w64-cross-mingwarm64-tools:
+    uses: ./.github/workflows/build-package.yml
+    needs: mingw-w64-cross-mingwarm64-headers
+    with:
+      package_name: mingw-w64-cross-mingwarm64-tools
       packages_repository: Windows-on-ARM-Experiments/MSYS2-packages
       packages_branch: ${{ inputs.msys2_packages_branch || 'woarm64' }}
 
